@@ -16,12 +16,12 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Enable CORS for frontend
+# Enable CORS for frontend - more specific configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:5500", "https://rotating-frontend.vercel.app", "*"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -51,10 +51,5 @@ def predict(payload: PredictionInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Vercel serverless handler - export the app directly
+# Export for Vercel
 handler = app
-
-# For Vercel Python runtime
-def lambda_handler(event, context):
-    """AWS Lambda handler for Vercel compatibility."""
-    return handler
