@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Dict, Any
+import json
 
 # Import lightweight prediction
 from predict import predict_handler, PredictionInput, PredictionResponse
@@ -51,5 +52,12 @@ def predict(payload: PredictionInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Export for Vercel
-handler = app
+# Vercel serverless handler
+def handler(request):
+    """Vercel serverless function handler."""
+    return app(request)
+
+# For Vercel Python runtime compatibility
+def lambda_handler(event, context):
+    """AWS Lambda handler for Vercel compatibility."""
+    return handler
