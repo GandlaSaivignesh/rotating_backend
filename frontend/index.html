@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotating Equipment Fault Detection</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Background Animation -->
+    <div class="bg-animation">
+      <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <div class="logo-text">
+            <h1>Fault Detection System</h1>
+            <p class="tagline">AI-Powered Rotating Equipment Analysis</p>
+          </div>
+        </div>
+        <div class="header-stats">
+          <div class="stat-item">
+            <span class="stat-value" id="accuracy">99.2%</span>
+            <span class="stat-label">Accuracy</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="response-time">12ms</span>
+            <span class="stat-label">Response</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="container">
+        <!-- Input Panel -->
+        <section class="input-panel">
+          <div class="panel-header">
+            <h2><i class="fas fa-sliders-h"></i> Sensor Parameters</h2>
+            <div class="panel-actions">
+              <button type="button" class="btn btn-secondary" id="randomize-btn">
+                <i class="fas fa-dice"></i> Random Values
+              </button>
+              <button type="button" class="btn btn-secondary" id="clear-btn">
+                <i class="fas fa-eraser"></i> Clear
+              </button>
+            </div>
+          </div>
+          
+          <form id="predict-form" class="sensor-form">
+            <div class="input-grid">
+              <div class="input-group">
+                <div class="input-header">
+                  <label for="vibration_x" class="input-label">
+                    <i class="fas fa-arrows-alt-h"></i> Vibration X
+                  </label>
+                  <span class="input-unit">mm/s</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="vibration_x" name="vibration_x" step="0.01" min="0" placeholder="0.00" required>
+                  <div class="input-bar"></div>
+                </div>
+                <span class="error" id="err-vibration_x"></span>
+              </div>
+
+              <div class="input-group">
+                <div class="input-header">
+                  <label for="vibration_y" class="input-label">
+                    <i class="fas fa-arrows-alt-v"></i> Vibration Y
+                  </label>
+                  <span class="input-unit">mm/s</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="vibration_y" name="vibration_y" step="0.01" min="0" placeholder="0.00" required>
+                  <div class="input-bar"></div>
+                </div>
+                <span class="error" id="err-vibration_y"></span>
+              </div>
+
+              <div class="input-group">
+                <div class="input-header">
+                  <label for="vibration_z" class="input-label">
+                    <i class="fas fa-arrows-alt"></i> Vibration Z
+                  </label>
+                  <span class="input-unit">mm/s</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="vibration_z" name="vibration_z" step="0.01" min="0" placeholder="0.00" required>
+                  <div class="input-bar"></div>
+                </div>
+                <span class="error" id="err-vibration_z"></span>
+              </div>
+
+              <div class="input-group">
+                <div class="input-header">
+                  <label for="acoustic_level" class="input-label">
+                    <i class="fas fa-volume-up"></i> Acoustic Level
+                  </label>
+                  <span class="input-unit">dB</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="acoustic_level" name="acoustic_level" step="0.01" min="0" placeholder="0.00" required>
+                  <div class="input-bar"></div>
+                </div>
+                <span class="error" id="err-acoustic_level"></span>
+              </div>
+
+              <div class="input-group">
+                <div class="input-header">
+                  <label for="temperature" class="input-label">
+                    <i class="fas fa-thermometer-half"></i> Temperature
+                  </label>
+                  <span class="input-unit">°C</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="temperature" name="temperature" step="0.01" min="-50" max="150" placeholder="0.00" required>
+                  <div class="input-bar"></div>
+                </div>
+                <span class="error" id="err-temperature"></span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="submit-btn" class="btn btn-primary">
+                <span class="btn-content">
+                  <i class="fas fa-microscope"></i>
+                  <span>Analyze System</span>
+                </span>
+                <div class="btn-loading">
+                  <div class="spinner"></div>
+                  <span>Analyzing...</span>
+                </div>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Results Panel -->
+        <section class="results-panel">
+          <div class="panel-header">
+            <h2><i class="fas fa-chart-line"></i> Analysis Results</h2>
+            <div class="status-indicator" id="status-indicator">
+              <div class="status-dot"></div>
+              <span>Ready</span>
+            </div>
+          </div>
+
+          <div class="results-content">
+            <!-- Placeholder State -->
+            <div id="result-placeholder" class="result-placeholder">
+              <div class="placeholder-icon">
+                <i class="fas fa-robot"></i>
+              </div>
+              <h3>Ready for Analysis</h3>
+              <p>Enter sensor parameters and click <strong>Analyze System</strong> to detect equipment faults.</p>
+              <div class="feature-highlights">
+                <div class="feature">
+                  <i class="fas fa-bolt"></i>
+                  <span>Real-time Analysis</span>
+                </div>
+                <div class="feature">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>99.2% Accuracy</span>
+                </div>
+                <div class="feature">
+                  <i class="fas fa-brain"></i>
+                  <span>ML-Powered</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Results State -->
+            <div id="result-content" class="result-content" hidden>
+              <div class="result-header">
+                <div class="result-icon" id="result-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="result-title">
+                  <h3 id="result-title">Analysis Complete</h3>
+                  <p id="result-subtitle">System evaluation finished</p>
+                </div>
+              </div>
+
+              <div class="result-metrics">
+                <div class="metric-card fault-metric">
+                  <div class="metric-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Fault Type</span>
+                  </div>
+                  <div class="metric-value" id="result-fault">--</div>
+                  <div class="metric-change" id="fault-confidence">--</div>
+                </div>
+
+                <div class="metric-card status-metric">
+                  <div class="metric-header">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>System Status</span>
+                  </div>
+                  <div class="metric-value" id="result-status">--</div>
+                  <div class="metric-badge" id="status-badge">--</div>
+                </div>
+              </div>
+
+              <div class="result-details">
+                <h4>Diagnostic Information</h4>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Vibration Analysis</span>
+                    <span class="detail-value" id="vibration-analysis">--</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Acoustic Analysis</span>
+                    <span class="detail-value" id="acoustic-analysis">--</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Thermal Analysis</span>
+                    <span class="detail-value" id="thermal-analysis">--</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Overall Health</span>
+                    <span class="detail-value" id="overall-health">--</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="result-actions">
+                <button type="button" class="btn btn-secondary" id="export-btn">
+                  <i class="fas fa-download"></i> Export Report
+                </button>
+                <button type="button" class="btn btn-secondary" id="share-btn">
+                  <i class="fas fa-share-alt"></i> Share Results
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-info">
+          <p>&copy; 2025 Rotating Equipment Fault Detection System</p>
+          <p>Powered by Advanced Machine Learning</p>
+        </div>
+        <div class="footer-links">
+          <a href="#" class="footer-link"><i class="fas fa-info-circle"></i> Documentation</a>
+          <a href="#" class="footer-link"><i class="fas fa-code"></i> API</a>
+          <a href="#" class="footer-link"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
