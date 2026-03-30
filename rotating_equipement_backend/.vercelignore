@@ -1,0 +1,14 @@
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/Major_project/
+backend/.git/
+backend/venv/
+backend/venv/*
+backend/.venv/*
+backend/__pycache__/*
+backend/Major_project/*
+backend/.git/*
+backend/model/*.pkl
+backend/README.md
+backend/.gitignore
