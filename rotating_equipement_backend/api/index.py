@@ -51,9 +51,10 @@ def predict(payload: PredictionInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Vercel serverless handler
-def handler(request):
-    """
-    Vercel serverless function handler.
-    """
-    return app(request)
+# Vercel serverless handler - export the app directly
+handler = app
+
+# For Vercel Python runtime
+def lambda_handler(event, context):
+    """AWS Lambda handler for Vercel compatibility."""
+    return handler
